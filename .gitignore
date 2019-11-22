@@ -2,3 +2,4 @@
 src/node_modules/
 src/jspm_packages/
 src/config/*
+src/bin/www
