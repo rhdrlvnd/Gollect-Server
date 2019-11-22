@@ -187,6 +187,54 @@ router.post('/:user_id/filterwords', (req, res, next) => {
 	});
 });
 
+/* DELETE : Delete user's filterwords */
+router.delete('/:user_id/filterwords/:filterword', (req, res, next) => {
+    const user_id = req.params.user_id;
+    const filterword = req.params.filterword;
+    
+	var sql_account_verification = 'SELECT filterword FROM user_filterwords WHERE user_id=' + user_id;
+	var sql_filterword_duplicate_check = 'SELECT * FROM user_filterwords WHERE user_id=' + user_id + ' AND filterword="' + filterword + '"';
+    var sql_filterword_delete = 'DELETE FROM user_filterwords WHERE user_id=' + user_id + ' AND filterword="' + filterword + '"';
+
+	connection.query(sql_account_verification, (err, rows, fields) => {
+		if(err){
+            dbError(res, err);
+        }
+        else if(rows.length === 0){
+            message = "No account matches that id."
+            res.json({
+                result : message,
+                filterwords : null
+            })
+        }
+		else{
+            connection.query(sql_filterword_duplicate_check, (err, rows, fields) => {
+                if(err){
+                    dbError(res, err);
+                }
+                else if(rows.length != 0){
+                    connection.query(sql_filterword_delete, params, (err, rows) => {
+                        if(err){
+                            dbError();
+                        }
+                        else{
+                            message = "success"
+                            res.json({
+                                result : message
+                            })
+                        }
+                    })
+                }
+                else{
+                    message = "There is no such filterword in  the user's filterwords.";
+                    res.json({
+                        result : message
+                    })
+                }
+            })
+		}
+	});
+});
 /*----------------------------------------------------------------------------
 1. Refactoring 필요
 2. dbError 함수의 경우 db 에러가 나야 확인할 수 있는데,
