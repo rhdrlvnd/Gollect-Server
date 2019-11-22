@@ -129,6 +129,64 @@ router.get('/:user_id/filterwords', (req, res, next) => {
 	});
 });
 
+/* POST : Create user's filterwords */
+router.post('/:user_id/filterwords', (req, res, next) => {
+    const user_id = req.params.user_id;
+    const filterword = req.body.filterword;
+    
+	var sql_account_verification = 'SELECT * FROM user_filterwords WHERE user_id=' + user_id;
+	var sql_filterword_load = 'SELECT * FROM user_filterwords WHERE user_id=' + user_id + ' AND filterword = "' + filterword + '"';
+	var sql_filterword_duplicate_check = 'SELECT * FROM user_filterwords WHERE user_id=' + user_id + ' AND filterword="' + filterword + '"';
+	var sql_filterword_creation = 'INSERT INTO user_filterwords (user_id, filterword) VALUES (?, ?)';
+
+    params = [user_id, filterword]
+	connection.query(sql_account_verification, (err, rows, fields) => {
+		if(err){
+            dbError(res, err);
+        }
+        else if(rows.length === 0){
+            message = "No account matches that id."
+            res.json({
+                result : message,
+                filterwords : null
+            })
+        }
+		else{
+            connection.query(sql_filterword_duplicate_check, (err, rows, fields) => {
+                if(err){
+                    dbError(res, err);
+                }
+                else if(rows.length === 0){
+                    connection.query(sql_filterword_creation, params, (err, rows) => {
+                        if(err){
+                            dbError();
+                        }
+                        else{
+                            message = "success"
+                            connection.query(sql_filterword_load, (err, rows) => {
+                                if(err) dbError();
+                                else {
+                                    res.json({
+                                        result : message,
+                                        filter : rows[0]
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+                else{
+                    message = "The Filterword already exists.";
+                    res.json({
+                        result : message,
+                        filter : null
+                    })
+                }
+            })
+		}
+	});
+});
+
 /*----------------------------------------------------------------------------
 1. Refactoring 필요
 2. dbError 함수의 경우 db 에러가 나야 확인할 수 있는데,
