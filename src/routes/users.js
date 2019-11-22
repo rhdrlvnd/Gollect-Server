@@ -98,6 +98,37 @@ router.post('/', (req, res, next) => {
     
 });
 
+/* GET : Load user's filterwords */
+router.get('/:user_id/filterwords', (req, res, next) => {
+	const user_id = req.params.user_id;
+
+	var sql_account_verification = 'SELECT filterword FROM user_filterwords WHERE user_id=' + user_id;
+
+	connection.query(sql_account_verification, (err, rows, fields) => {
+		if(err){
+            dbError(res, err);
+        }
+        else if(rows.length === 0){
+            message = "No account matches that id."
+            res.json({
+                result : message,
+                filterwords : null
+            })
+        }
+		else{
+            message = "success"
+            var filterwords = [];
+            for(let i = 0; i < rows.length; i++){
+                filterwords.push(rows[i].filterword);
+            }
+			res.json({
+				result : message,
+				filterwords : filterwords
+			});
+		}
+	});
+});
+
 /*----------------------------------------------------------------------------
 1. Refactoring 필요
 2. dbError 함수의 경우 db 에러가 나야 확인할 수 있는데,
