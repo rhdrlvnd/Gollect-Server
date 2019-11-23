@@ -69,7 +69,7 @@ router.post('/users/:user_id', (req, res, next) => {
             message = "No account matches that id."
             res.json({
                 result : message,
-                filterwords : null
+                filter : null
             })
         }
 		else{
@@ -89,7 +89,7 @@ router.post('/users/:user_id', (req, res, next) => {
                                 else {
                                     res.json({
                                         result : message,
-                                        filterword : rows[0]
+                                        filter : rows[0]
                                     })
                                 }
                             })
