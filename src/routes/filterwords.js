@@ -89,7 +89,7 @@ router.post('/users/:user_id', (req, res, next) => {
                                 else {
                                     res.json({
                                         result : message,
-                                        filter : rows[0]
+                                        filterword : rows[0]
                                     })
                                 }
                             })
