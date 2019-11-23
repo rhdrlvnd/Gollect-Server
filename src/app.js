@@ -8,7 +8,7 @@ var usersRouter = require('./routes/users');
 var contentsRouter = require('./routes/contents');
 var platformsRouter = require('./routes/platforms');
 var filterwordsRouter = require('./routes/filterwords');
-
+var subscriptionsRouter = require('./routes/subscriptions');
 var app = express();
 
 app.use(logger('dev'));
@@ -21,6 +21,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/contents', contentsRouter);
 app.use('/platforms', platformsRouter);
+app.use('/subscriptions',subscriptionsRouter);
 app.use('/filterwords', filterwordsRouter);
 
 module.exports = app;
