@@ -14,12 +14,16 @@ var user_subscriptions_keyword = [];        // User's subscribing keyword
 var user_subscriptions_textContents = [];   // User's textcontents
 var user_subscriptions_videoContents = [];   // User's textcontents
 
+var message;
+
 var getUserSubscriptionInformationByUserId = function (id, callback) {
 
     var sql = 'SELECT * FROM subscriptions WHERE user_id = ' + id;
     
     connection.query(sql, (err, rows, fields) => {
-        if (err) return callback(err);
+        if (err) {
+            return callback(err);
+        }
         if (rows.length) {
             for (var i = 0; i < rows.length; i++) {
                 user_subscriptions.push(rows[i]);
@@ -40,7 +44,6 @@ var getTextContentsByPlatformIdAndKeyWord = function (platform_id, keyword, call
 
         connection.query(sql, (err, rows, field) => {
             if(err) {
-                console.log("ERR")
                 return callback(err);
             }
             else{
@@ -68,7 +71,8 @@ var getVideoContentsByPlatformIdAndKeyWord = function (platform_id, keyword, cal
 
         connection.query(sql, (err, rows, field) => {
             if(err) {
-                console.log("ERR")
+                message = "DB has error"
+                console.log('Error while performing query.', err);
                 return callback(err);
             }
             else{
@@ -101,11 +105,14 @@ var convertObjectToJson = function(object){
 router.get('/text/users/:user_id', (req, res, next) => {
     const userId = req.params.id;
 
-    var result = false;
-
     getUserSubscriptionInformationByUserId(userId, function (err, rows) {
         if (err) {
-            console.log("Error while Get User Subscription Information By UserId!", err);
+            message = "DB has error"
+            console.log('Error while performing query.', err);
+            res.json({
+                result : message,
+                textContents : null
+            })
         }
         else {
             json_result = convertObjectToJson(rows);
@@ -121,13 +128,18 @@ router.get('/text/users/:user_id', (req, res, next) => {
                 user_subscriptions_keyword,
                 function(err, rows){
                     if(err){
-                        console.log("Error while Get Text Contents By user's platform id & user's keyword!", err);
+                        message = "DB has error"
+                        console.log('Error while performing query.', err);
+                        res.json({
+                            result : message,
+                            textContents: null
+                        })
                     }
                     else{
-                        result = true;
+                        message = "success";
                         res.json({
-                            result: result,
-                            rows: rows
+                            result: message,
+                            textContents: rows
                         })
                     }
                 }
@@ -146,11 +158,14 @@ router.get('/text/users/:user_id', (req, res, next) => {
 router.get('/video/users/:user_id', (req, res, next) => {
     const userId = req.params.id;
 
-    var result = false;
-
     getUserSubscriptionInformationByUserId(userId, function (err, rows) {
         if (err) {
-            console.log("Error while Get User Subscription Information By UserId!", err);
+            message = "DB has error"
+            console.log('Error while performing query.', err);
+            res.json({
+                result : message,
+                videoContents : null
+            })
         }
         else {
             json_result = convertObjectToJson(rows);
@@ -166,13 +181,18 @@ router.get('/video/users/:user_id', (req, res, next) => {
                 user_subscriptions_keyword,
                 function(err, rows){
                     if(err){
-                        console.log("Error while Get Video Contents By user's platform id & user's keyword!", err);
+                        message = "DB has error"
+                        console.log('Error while performing query.', err);
+                        res.json({
+                            result : message,
+                            videoContents: null
+                        })
                     }
                     else{
-                        result = true;
+                        message = "success";
                         res.json({
-                            result: result,
-                            rows: rows
+                            result: message,
+                            videoContents: rows
                         })
                     }
                 }
@@ -185,6 +205,7 @@ router.get('/video/users/:user_id', (req, res, next) => {
     user_subscriptions_keyword = [];            // Reset user_subscriptions_keyword
     user_subscriptions_platform_id = [];        // Reset user_subscriptions_platform_id
 });
+
 
 /*-------------------------------------------------------------------------------------------
 지금 비디오랑 텍스트가 나뉘어져 있음
