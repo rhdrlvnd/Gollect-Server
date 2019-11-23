@@ -241,4 +241,35 @@ router.delete('/:user_id/filterwords/:filterword', (req, res, next) => {
 에러를 일부러 발생시키는 법을 몰라서 확인 못해봄
 ----------------------------------------------------------------------------*/
 
+
+/* DELETE : Delete user's subscription platform */
+router.delete('/:user_id/platforms/:platform_id',(req,res,next)=>{
+	var userId=req.params.user_id;
+	var platformId = req.params.platform_id;
+
+	var result = "";
+
+	var sql = "DELETE FROM subscriptions WHERE user_id = "+userId;
+	sql+=" and platform_id = "+platformId;
+	
+	connection.query(sql, (err, rows) => {
+        if (err) {
+			result = err;
+			res.json({
+				result: result
+			});
+		}
+        else {
+			result = "success";
+
+			res.json({
+				result: result
+			});
+        }
+    });
+});
+
+
+
+
 module.exports = router;
