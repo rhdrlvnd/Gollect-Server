@@ -110,27 +110,50 @@ router.post('/users/:user_id', (req, res, next) => {
 
 /* DELETE users filterword*/
 router.delete('/:filterword/users/:user_id', function(req, res){
-	const userId = req.params.user_id;
-	const filterword = req.params.filterword;
+    const filterword = req.params.filterword;
+    const user_id = req.params.user_id;
+    
+	var sql_account_verification = 'SELECT filterword FROM user_filterwords WHERE user_id=' + user_id;
+	var sql_filterword_duplicate_check = 'SELECT * FROM user_filterwords WHERE user_id=' + user_id + ' AND filterword="' + filterword + '"';
+    var sql_filterword_delete = 'DELETE FROM user_filterwords WHERE user_id=' + user_id + ' AND filterword="' + filterword + '"';
 
-	var sql_filterword_delete = 'DELETE FROM user_filterwords WHERE user_id = ';
-    sql += userId + ' AND filterword ="';
-    sql += filterword + '"';
-
-    console.log("sql: " + sql);
-
-    connection.query(sql_filterword_delete, function(err, result){
-        if(err){
+	connection.query(sql_account_verification, (err, rows, fields) => {
+		if(err){
             dbError(res, err);
         }
-        else{
-            message = "success";
-
+        else if(rows.length === 0){
+            message = "No account matches that id."
             res.json({
-                result : message
+                result : message,
             })
         }
-    })
+		else{
+            connection.query(sql_filterword_duplicate_check, (err, rows, fields) => {
+                if(err){
+                    dbError(res, err);
+                }
+                else if(rows.length != 0){
+                    connection.query(sql_filterword_delete, params, (err, rows) => {
+                        if(err){
+                            dbError();
+                        }
+                        else{
+                            message = "success"
+                            res.json({
+                                result : message
+                            })
+                        }
+                    })
+                }
+                else{
+                    message = "There is no such filterword in  the user's filterwords.";
+                    res.json({
+                        result : message
+                    })
+                }
+            })
+		}
+	});
 });
 
 module.exports = router;
