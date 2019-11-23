@@ -98,7 +98,7 @@ var convertObjectToJson = function(object){
 
 /* GET textContents array of user by user_hash */
 // 참고 : https://github.com/mysqljs/mysql/issues/1361
-router.get('/text/:id', (req, res, next) => {
+router.get('/text/users/:user_id', (req, res, next) => {
     const userId = req.params.id;
 
     var result = false;
@@ -143,7 +143,7 @@ router.get('/text/:id', (req, res, next) => {
 
 /* GET videoContents array of user by user_hash */
 // 참고 : https://github.com/mysqljs/mysql/issues/1361
-router.get('/video/:id', (req, res, next) => {
+router.get('/video/users/:user_id', (req, res, next) => {
     const userId = req.params.id;
 
     var result = false;
