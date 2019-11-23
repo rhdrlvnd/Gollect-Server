@@ -47,30 +47,63 @@ router.get('/users/:user_id', (req, res, next) => {
 				filterwords : filterwords
 			});
 		}
-		}
 	});
 });
 
 /* POST users filterword*/
 router.post('/users/:user_id', (req, res, next) => {
-	const userId = req.params.user_id;
+	const user_id = req.params.user_id;
 	const filterword = req.body.filterword;
 
-	var params = [userId, filterword];
-	console.log(params);
-
+    var sql_account_verification = 'SELECT * FROM user_filterwords WHERE user_id=' + user_id;
+	var sql_filterword_load = 'SELECT * FROM user_filterwords WHERE user_id=' + user_id + ' AND filterword = "' + filterword + '"';
+	var sql_filterword_duplicate_check = 'SELECT * FROM user_filterwords WHERE user_id=' + user_id + ' AND filterword="' + filterword + '"';
 	var sql_filterword_creation = 'INSERT INTO user_filterwords (user_id, filterword) VALUES (?, ?)';
 
-	connection.query(sql_filterword_creation, params, (err, rows, fields) => {
+    params = [user_id, filterword]
+	connection.query(sql_account_verification, (err, rows, fields) => {
 		if(err){
             dbError(res, err);
-		}
-		else{
-			message = "success";
-			res.json({
+        }
+        else if(rows.length === 0){
+            message = "No account matches that id."
+            res.json({
                 result : message,
-                filterword : filerword
-			});
+                filterwords : null
+            })
+        }
+		else{
+            connection.query(sql_filterword_duplicate_check, (err, rows, fields) => {
+                if(err){
+                    dbError(res, err);
+                }
+                else if(rows.length === 0){
+                    connection.query(sql_filterword_creation, params, (err, rows) => {
+                        if(err){
+                            dbError();
+                        }
+                        else{
+                            message = "success"
+                            connection.query(sql_filterword_load, (err, rows) => {
+                                if(err) dbError();
+                                else {
+                                    res.json({
+                                        result : message,
+                                        filter : rows[0]
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+                else{
+                    message = "The Filterword already exists.";
+                    res.json({
+                        result : message,
+                        filter : null
+                    })
+                }
+            })
 		}
 	});
 });
