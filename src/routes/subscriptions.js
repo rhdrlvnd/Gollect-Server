@@ -33,6 +33,35 @@ router.get('/users/:user_id',(req,res,next)=>{
     });
 });
 
+
+
+router.get('/users/:user_id/platforms/:platform_id',(req,res,next)=>{
+	const userId = req.params.user_id;
+	const platformId = req.params.platform_id;
+	var sql = 'SELECT * FROM subscriptions WHERE user_id = ' + userId;
+	sql+=' AND platform_id = '+platformId;
+
+	var result = "";
+	connection.query(sql, (err, rows) => {
+        if (err) {
+			result=err;
+			res.json({
+				result:result,
+				keywords:null
+			})
+		}
+        else {
+			result = "success";
+            res.json({
+				result:result,
+				keywords:rows
+			});
+        }
+    });
+})
+
+
+
 router.post('/users/:user_id',(req,res,next)=>{
 	const userId = req.body.userId;
 	const platformId = req.body.platformId;
