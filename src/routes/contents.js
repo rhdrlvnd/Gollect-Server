@@ -19,7 +19,7 @@ var message;
 var getUserSubscriptionInformationByUserId = function (id, callback) {
 
     var sql = 'SELECT * FROM subscriptions WHERE user_id = ' + id;
-    
+
     connection.query(sql, (err, rows, fields) => {
         if (err) {
             return callback(err);
@@ -34,59 +34,67 @@ var getUserSubscriptionInformationByUserId = function (id, callback) {
 }
 
 var getTextContentsByPlatformIdAndKeyWord = function (platform_id, keyword, callback){
- 
+
     var count = 0;
 
+	var sql = 'SELECT * FROM textcontents WHERE';
+
     for(var i = 0; i < platform_id.length; i++){
-        var sql = 'SELECT * FROM textcontents WHERE platform_id = ';
-        sql += platform_id[i];
-        sql += ' AND title LIKE "%' + keyword[i] + '%"';
+        sql += ' (platform_id = ' + platform_id[i];
+        sql += ' AND title LIKE "%' + keyword[i] + '%")';
 
-        connection.query(sql, (err, rows, field) => {
-            if(err) {
-                return callback(err);
-            }
-            else{
-                rows.forEach(element => {
-                    user_subscriptions_textContents.push(element);
-                });
+        if( i != platform_id.length-1){
+	        sql += ' OR ';
+        }
+        else{
+        	sql += 'ORDER BY uploaded_at DESC';
+		}
+	}
 
-                if(count === platform_id.length-1){
-                    callback(null, user_subscriptions_textContents);
-                }
-                count++;
-            }
-        })
-    }
+    connection.query(sql, (err, rows, field) => {
+        if(err) {
+            return callback(err);
+        }
+        else{
+            rows.forEach(element => {
+                user_subscriptions_textContents.push(element);
+            });
+            callback(null, user_subscriptions_textContents);
+        }
+    })
 }
 
 var getVideoContentsByPlatformIdAndKeyWord = function (platform_id, keyword, callback){
- 
+
     var count = 0;
 
+	var sql = 'SELECT * FROM videocontents WHERE';
+
     for(var i = 0; i < platform_id.length; i++){
-        var sql = 'SELECT * FROM videocontents WHERE platform_id = ';
-        sql += platform_id[i];
-        sql += ' AND title LIKE "%' + keyword[i] + '%"';
+        sql += ' (platform_id = '+ platform_id[i];
+        sql += ' AND title LIKE "%' + keyword[i] + '%")';
 
-        connection.query(sql, (err, rows, field) => {
-            if(err) {
-                message = "DB has error"
-                console.log('Error while performing query.', err);
-                return callback(err);
-            }
-            else{
-                rows.forEach(element => {
-                    user_subscriptions_videoContents.push(element);
-                });
+		if(i != platform_id.length-1){
+			sql += ' OR '
+		}
+		else{
+			sql += 'ORDER BY uploaded_at DESC';
+		}
+	}
 
-                if(count === platform_id.length-1){
-                    callback(null, user_subscriptions_videoContents);
-                }
-                count++;
-            }
-        })
-    }
+    connection.query(sql, (err, rows, field) => {
+        if(err) {
+            message = "DB has error"
+            console.log('Error while performing query.', err);
+            return callback(err);
+        }
+        else{
+            rows.forEach(element => {
+                user_subscriptions_videoContents.push(element);
+            });
+            callback(null, user_subscriptions_videoContents);
+        }
+    })
 }
 
 var convertObjectToJson = function(object){
