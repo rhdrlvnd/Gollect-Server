@@ -22,7 +22,7 @@ getHtml(RURL)
     const $bodyList = $('#channels-browse-content-grid').children('li.channels-content-item');
     $bodyList.each(function(i, elem) {
       ulList[i] = {
-          platform_id:9,
+          platform_id:1,
           title: $(this).find('div.yt-lockup-content a').text(),
           thumbnail_src: $(this).find('img').attr('src'),
           url: "https://www.youtube.com" + $(this).find('div.yt-lockup-content a').attr('href'),
