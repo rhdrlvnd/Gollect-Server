@@ -25,7 +25,7 @@ getHtml(RURL)
     $bodyList.each(function(i, elem) {
       let targetUrl = $(this).find('a.sj_ln').attr('href');
       ulList[i] = {
-          id:8,
+          id:14,
           title: $(this).find('a.sj_ln').text(),
           url: targetUrl,
       };
