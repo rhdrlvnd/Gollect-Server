@@ -9,6 +9,7 @@ var contentsRouter = require('./routes/contents');
 var platformsRouter = require('./routes/platforms');
 var filterwordsRouter = require('./routes/filterwords');
 var subscriptionsRouter = require('./routes/subscriptions');
+var bookmarksRouter = require('./routes/bookmarks');
 var app = express();
 
 app.use(logger('dev'));
@@ -23,5 +24,6 @@ app.use('/contents', contentsRouter);
 app.use('/platforms', platformsRouter);
 app.use('/subscriptions',subscriptionsRouter);
 app.use('/filterwords', filterwordsRouter);
+app.use('/bookmarks', bookmarksRouter);
 
 module.exports = app;
