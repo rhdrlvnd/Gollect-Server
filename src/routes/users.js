@@ -49,9 +49,9 @@ router.get('/:user_hash', (req, res, next) => {
 
 /* POST : Account Creation  */
 router.post('/', (req, res, next) => {
-	const hash = req.body.user_hash;
-	const email = req.body.user_email;
-	const name = req.body.user_name;
+	const hash = req.body.userHash;
+	const email = req.body.userEmail;
+	const name = req.body.userName;
 
 	var params = [hash,email, name];
     
@@ -88,7 +88,8 @@ router.post('/', (req, res, next) => {
             });
         }
         else{
-            message = "The Account already exist."
+            // The account is already existed
+            message = "success - (The account is already existed)"
             res.json({
                 result : message,
                 user: null,
