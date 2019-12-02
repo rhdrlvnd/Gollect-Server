@@ -221,6 +221,72 @@ router.get('/video/users/:user_id', (req, res, next) => {
     user_subscriptions_platform_id = [];        // Reset user_subscriptions_platform_id
 });
 
+/* GET textcontent by textcontent_id */
+router.get('/text/:textcontent_id', (req, res) => {
+    const textContentId = req.params.textcontent_id;
+
+    sql_textContent_load = `SELECT * FROM textcontents WHERE textContentId=${textContentId}`;
+
+    connection.query(sql_textContent_load, (err, rows) => {
+        if(err){
+            message = "DB has error"
+            res.json({
+                result : message,
+                textContent: null
+            })
+        }
+        else{
+            if(rows.length == 0){
+                message = "There is no corresponding content."
+                res.json({
+                    result : message,
+                    textContent: null
+                })
+            }
+            else{
+                message = "success"
+                res.json({
+                    result : message,
+                    textContent: rows
+                })
+            }
+        }
+    })
+})
+
+/* GET videocontent by videocontent_id */
+router.get('/video/:videocontent_id', (req, res) => {
+    const videoContentId = req.params.videocontent_id;
+
+    sql_videoContent_load = `SELECT * FROM videocontents WHERE videoContentId=${videoContentId}`;
+
+    connection.query(sql_videoContent_load, (err, rows) => {
+        if(err){
+            message = "DB has error"
+            res.json({
+                result : message,
+                videoContent: null
+            })
+        }
+        else{
+            if(rows.length == 0){
+                message = "There is no corresponding content."
+                res.json({
+                    result : message,
+                    videoContent: null
+                })
+            }
+            else{
+                message = "success"
+                res.json({
+                    result : message,
+                    videoContent: rows
+                })
+            }
+        }
+    })
+})
+
 
 /*-------------------------------------------------------------------------------------------
 지금 비디오랑 텍스트가 나뉘어져 있음
