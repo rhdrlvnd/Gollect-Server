@@ -20,6 +20,26 @@ var dbError = function(res, err){
 var message;
 
 /* POST bookmark textContents by user_id and textContentUrl */
+router.get('/users/:user_id/contents/text', (req, res, next) =>{
+    const userId = parseInt(req.params.user_id);
+
+    sql_bookmark_load = `SELECT * FROM user_textcontents WHERE user_id=${userId}`;
+
+    connection.query(sql_bookmark_load, (err, rows) => {
+        if(err){
+            dbError(res, err);
+        }
+        else{
+            message = "success",
+            res.json({
+                result : message,
+                textContents: rows
+            })
+        }
+    })
+})
+
+/* POST bookmark textContents by user_id and textContentUrl */
 router.post('/users/:user_id/contents/text', (req, res, next) => {
     const userId = parseInt(req.params.user_id);
     const textContentUrl = req.body.textContentUrl;
