@@ -22,6 +22,8 @@ var getUserSubscriptionInformationByUserId = function (id, callback) {
 
     connection.query(sql, (err, rows, fields) => {
         if (err) {
+            message = "DB has error"
+            console.log('Error while getTextContentsByPlatformIdAndKeyWord.', err);
             return callback(err);
         }
         if (rows.length) {
@@ -38,7 +40,10 @@ var getTextContentsByPlatformIdAndKeyWord = function (platform_id, keyword, call
     var count = 0;
 
 	var sql = 'SELECT * FROM textcontents WHERE';
-
+    if(platform_id.length == 0) {
+        sql = 'SELECT * FROM textcontents WHERE platform_id=0'
+    }
+    
     for(var i = 0; i < platform_id.length; i++){
         sql += ' (platform_id = ' + platform_id[i];
         sql += ' AND title LIKE "%' + keyword[i] + '%")';
@@ -53,6 +58,8 @@ var getTextContentsByPlatformIdAndKeyWord = function (platform_id, keyword, call
 
     connection.query(sql, (err, rows, field) => {
         if(err) {
+            message = "DB has error"
+            console.log('Error while getTextContentsByPlatformIdAndKeyWord.', err);
             return callback(err);
         }
         else{
