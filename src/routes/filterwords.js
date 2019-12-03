@@ -113,15 +113,15 @@ router.delete('/:filterword/users/:user_id', function(req, res){
     const filterword = req.params.filterword;
     const user_id = req.params.user_id;
     
-	var sql_account_verification = 'SELECT filterword FROM user_filterwords WHERE user_id=' + user_id;
-	var sql_filterword_duplicate_check = 'SELECT * FROM user_filterwords WHERE user_id=' + user_id + ' AND filterword="' + filterword + '"';
-    var sql_filterword_delete = 'DELETE FROM user_filterwords WHERE user_id=' + user_id + ' AND filterword="' + filterword + '"';
+	var sql_account_verification = `SELECT filterword FROM user_filterwords WHERE user_id=${user_id}`;
+	var sql_filterword_duplicate_check = `SELECT * FROM user_filterwords WHERE user_id=${user_id} AND filterword='${filterword}'`;
+    var sql_filterword_delete = `DELETE FROM user_filterwords WHERE user_id=${user_id} AND filterword='${filterword}'`;
 
 	connection.query(sql_account_verification, (err, rows, fields) => {
 		if(err){
             dbError(res, err);
         }
-        else if(rows.length === 0){
+        else if(rows.length == 0){
             message = "No account matches that id."
             res.json({
                 result : message,
@@ -133,7 +133,7 @@ router.delete('/:filterword/users/:user_id', function(req, res){
                     dbError(res, err);
                 }
                 else if(rows.length != 0){
-                    connection.query(sql_filterword_delete, params, (err, rows) => {
+                    connection.query(sql_filterword_delete, (err, rows) => {
                         if(err){
                             dbError();
                         }
