@@ -23,10 +23,11 @@ var message;
 router.get('/users/:user_id/contents/text', (req, res) =>{
     const userId = parseInt(req.params.user_id);
 
-    var textcontent_array = [];
+    var textContentId_array = [];
+    var textContents_array = [];
 
     sql_textContentId_load = `SELECT textcontent_id FROM user_textcontents WHERE user_id=${userId}`;
-    sql_textContents_load = `SELECT * FROM textcontents WHERE textContentId IN (`;
+    sql_textContent_load = `SELECT * FROM textcontents WHERE textContentId = `;
 
     connection.query(sql_textContentId_load, (err, rows) => {
         if(err){
@@ -41,26 +42,24 @@ router.get('/users/:user_id/contents/text', (req, res) =>{
         }
         else{
             for(let i = 0; i < rows.length; i++){
-                textcontent_array.push(rows[i].textcontent_id);
-                if(i == rows.length-1){
-                    sql_textContents_load = sql_textContents_load +  `${textcontent_array[i]})`
-                }
-                else{
-                    sql_textContents_load = sql_textContents_load + `${textcontent_array[i]},`; 
-                }
+                textContentId_array.push(rows[i].textcontent_id);
+
+                connection.query(sql_textContent_load+textContentId_array[i], (err, rows) => {
+                    if(err){
+                        dbError(res, err)
+                    }
+                    else{
+                        textContents_array.push(rows[0]);
+                        if(textContents_array.length == textContentId_array.length){
+                            message = "success";
+                            res.json({
+                                result : message,
+                                textContents: textContents_array
+                            })
+                        }
+                    }
+                })
             }
-            connection.query(sql_textContents_load, (err, rows)=>{
-                if(err){
-                    dbError(res, err);
-                }
-                else{
-                    message = "success";
-                    res.json({
-                        result : message,
-                        textContents: rows
-                    })
-                }
-            })
         }
     })
 })
@@ -68,12 +67,13 @@ router.get('/users/:user_id/contents/text', (req, res) =>{
 /* GET bookmark videoContents by user_id */
 router.get('/users/:user_id/contents/video', (req, res) =>{
     const userId = parseInt(req.params.user_id);
-
-    var videocontent_array = [];
-
+    
+    var videoContentId_array = [];
+    var videoContents_array = [];
+    
     sql_videoContentId_load = `SELECT videocontent_id FROM user_videocontents WHERE user_id=${userId}`;
-    sql_videoContents_load = `SELECT * FROM videocontents WHERE videoContentId IN (`;
-
+    sql_videoContent_load = `SELECT * FROM videocontents WHERE videoContentId =`;
+    
     connection.query(sql_videoContentId_load, (err, rows) => {
         if(err){
             dbError(res, err);
@@ -87,26 +87,24 @@ router.get('/users/:user_id/contents/video', (req, res) =>{
         }
         else{
             for(let i = 0; i < rows.length; i++){
-                videocontent_array.push(rows[i].videocontent_id);
-                if(i == rows.length-1){
-                    sql_videoContents_load = sql_videoContents_load +  `${videocontent_array[i]})`
-                }
-                else{
-                    sql_videoContents_load = sql_videoContents_load + `${videocontent_array[i]},`; 
-                }
+                videoContentId_array.push(rows[i].videocontent_id);
+            
+                connection.query(sql_videoContent_load+videoContentId_array[i], (err, rows) => {
+                    if(err){
+                        dbError(res, err)
+                    }
+                    else{
+                        videoContents_array.push(rows[0]);
+                        if(videoContents_array.length == videoContentId_array.length){
+                            message = "success";
+                            res.json({
+                                result : message,
+                                videoContents: videoContents_array
+                            })
+                        }
+                    }
+                })
             }
-            connection.query(sql_videoContents_load, (err, rows)=>{
-                if(err){
-                    dbError(res, err);
-                }
-                else{
-                    message = "success";
-                    res.json({
-                        result : message,
-                        videoContents: rows
-                    })
-                }
-            })
         }
     })
 })
@@ -270,7 +268,5 @@ router.delete('/users/:user_id/contents/video/:videocontent_id', (req, res, next
         }
     })
 });
-
-
 
 module.exports = router;
