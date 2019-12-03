@@ -14,7 +14,8 @@ const getHtml = async (URL) => {
   }
 };
 
-getHtml(RURL)
+function crowl(){
+  getHtml(RURL)
   .then(html => {
     let ulList = [];
     const $ = cheerio.load(html.data);
@@ -63,10 +64,10 @@ getHtml(RURL)
                 console.log('success!');
             }
         });
-
-
-
       });
     });
   });
+}
+
+const time = setInterval(crowl,600*1000);
 
