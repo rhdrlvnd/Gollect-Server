@@ -11,6 +11,9 @@ var filterwordsRouter = require('./routes/filterwords');
 var subscriptionsRouter = require('./routes/subscriptions');
 var app = express();
 
+require('./routes/nonVideoCrowler/overwatchInven');
+
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
