@@ -22,6 +22,8 @@ var getUserSubscriptionInformationByUserId = function (id, callback) {
 
     connection.query(sql, (err, rows, fields) => {
         if (err) {
+            message = "DB has error"
+            console.log('Error while getTextContentsByPlatformIdAndKeyWord.', err);
             return callback(err);
         }
         if (rows.length) {
@@ -38,7 +40,10 @@ var getTextContentsByPlatformIdAndKeyWord = function (platform_id, keyword, call
     var count = 0;
 
 	var sql = 'SELECT * FROM textcontents WHERE';
-
+    if(platform_id.length == 0) {
+        sql = 'SELECT * FROM textcontents WHERE platform_id=0'
+    }
+    
     for(var i = 0; i < platform_id.length; i++){
         sql += ' (platform_id = ' + platform_id[i];
         sql += ' AND title LIKE "%' + keyword[i] + '%")';
@@ -53,6 +58,8 @@ var getTextContentsByPlatformIdAndKeyWord = function (platform_id, keyword, call
 
     connection.query(sql, (err, rows, field) => {
         if(err) {
+            message = "DB has error"
+            console.log('Error while getTextContentsByPlatformIdAndKeyWord.', err);
             return callback(err);
         }
         else{
@@ -213,6 +220,72 @@ router.get('/video/users/:user_id', (req, res, next) => {
     user_subscriptions_keyword = [];            // Reset user_subscriptions_keyword
     user_subscriptions_platform_id = [];        // Reset user_subscriptions_platform_id
 });
+
+/* GET textcontent by textcontent_id */
+router.get('/text/:textcontent_id', (req, res) => {
+    const textContentId = req.params.textcontent_id;
+
+    sql_textContent_load = `SELECT * FROM textcontents WHERE textContentId=${textContentId}`;
+
+    connection.query(sql_textContent_load, (err, rows) => {
+        if(err){
+            message = "DB has error"
+            res.json({
+                result : message,
+                textContent: null
+            })
+        }
+        else{
+            if(rows.length == 0){
+                message = "There is no corresponding content."
+                res.json({
+                    result : message,
+                    textContent: null
+                })
+            }
+            else{
+                message = "success"
+                res.json({
+                    result : message,
+                    textContent: rows
+                })
+            }
+        }
+    })
+})
+
+/* GET videocontent by videocontent_id */
+router.get('/video/:videocontent_id', (req, res) => {
+    const videoContentId = req.params.videocontent_id;
+
+    sql_videoContent_load = `SELECT * FROM videocontents WHERE videoContentId=${videoContentId}`;
+
+    connection.query(sql_videoContent_load, (err, rows) => {
+        if(err){
+            message = "DB has error"
+            res.json({
+                result : message,
+                videoContent: null
+            })
+        }
+        else{
+            if(rows.length == 0){
+                message = "There is no corresponding content."
+                res.json({
+                    result : message,
+                    videoContent: null
+                })
+            }
+            else{
+                message = "success"
+                res.json({
+                    result : message,
+                    videoContent: rows
+                })
+            }
+        }
+    })
+})
 
 
 /*-------------------------------------------------------------------------------------------

@@ -16,6 +16,7 @@ const getHtml = async (URL) => {
   }
 };
 
+
 function crowl(){
 	
 	getHtml(RURL)
@@ -70,3 +71,4 @@ function crowl(){
 }
 
   const time = setInterval(crowl,600*1000);
+
