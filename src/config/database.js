@@ -1,7 +1,7 @@
 module.exports = {
 	host	: 'localhost',
 	user	: 'root',
-	password: '****',
+	password: '123123',
 	port	: 3306,
 	database: 'gollect_db'
 }
