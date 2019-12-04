@@ -13,7 +13,7 @@ var dbError = function(res, err){
     console.log('Error while performing query.', err);
     res.json({
         result : message,
-        user: null
+        textContents: null
     })
 }
 
