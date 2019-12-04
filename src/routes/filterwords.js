@@ -16,7 +16,7 @@ var dbError = function(res, err){
     console.log('Error while performing query.', err);
     res.json({
         result : message,
-        user: null
+        filterwords: null
     })
 }
 
@@ -24,31 +24,46 @@ var dbError = function(res, err){
 router.get('/users/:user_id', (req, res, next) => {
 	const user_id = req.params.user_id;
 
+	var sql_user_check = `SELECT * FROM users WHERE id=${user_id}`;
 	var sql_filterwords_load = 'SELECT filterword FROM user_filterwords WHERE user_id=' + user_id;
 
-	connection.query(sql_filterwords_load, (err, rows, fields) => {
-		if(err){
+    connection.query(sql_user_check, (err, rows) => {
+        if(err){
             dbError(res, err);
         }
-        else if(rows.length === 0){
-            message = "No account matches that id."
+        else if(rows.length == 0){
+            message = "There is no user matches that user_id";
             res.json({
                 result : message,
-                filterwords : null
+                filterwords: null
             })
         }
-		else{
-            message = "success"
-            var filterwords = [];
-            for(let i = 0; i < rows.length; i++){
-                filterwords.push(rows[i].filterword);
-            }
-			res.json({
-				result : message,
-				filterwords : filterwords
-			});
-		}
-	});
+        else{
+            connection.query(sql_filterwords_load, (err, rows, fields) => {
+                if(err){
+                    dbError(res, err);
+                }
+                else if(rows.length === 0){
+                    message = "No filterwords match that id."
+                    res.json({
+                        result : message,
+                        filterwords : null
+                    })
+                }
+                else{
+                    message = "success"
+                    var filterwords = [];
+                    for(let i = 0; i < rows.length; i++){
+                        filterwords.push(rows[i].filterword);
+                    }
+                    res.json({
+                        result : message,
+                        filterwords : filterwords
+                    });
+                }
+            });
+        }
+    })
 });
 
 /* POST users filterword*/
@@ -56,15 +71,19 @@ router.post('/users/:user_id', (req, res, next) => {
 	const user_id = req.params.user_id;
 	const filterword = req.body.filterword;
 
-    var sql_account_verification = 'SELECT * FROM user_filterwords WHERE user_id=' + user_id;
-	var sql_filterword_load = 'SELECT * FROM user_filterwords WHERE user_id=' + user_id + ' AND filterword = "' + filterword + '"';
+    var sql_account_verification = `SELECT * FROM users WHERE id=${user_id}`;
+	var sql_filterword_load = `SELECT * FROM user_filterwords WHERE user_id= ${user_id} AND filterword = "${filterword}"`;
 	var sql_filterword_duplicate_check = 'SELECT * FROM user_filterwords WHERE user_id=' + user_id + ' AND filterword="' + filterword + '"';
 	var sql_filterword_creation = 'INSERT INTO user_filterwords (user_id, filterword) VALUES (?, ?)';
 
     params = [user_id, filterword]
 	connection.query(sql_account_verification, (err, rows, fields) => {
 		if(err){
-            dbError(res, err);
+            message = "DB has error";
+            res.json({
+                result : message,
+                filter : null
+            })
         }
         else if(rows.length === 0){
             message = "No account matches that id."
