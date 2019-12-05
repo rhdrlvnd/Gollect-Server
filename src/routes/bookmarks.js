@@ -13,7 +13,7 @@ var dbError = function(res, err){
     console.log('Error while performing query.', err);
     res.json({
         result : message,
-        user: null
+        textContents: null
     })
 }
 
@@ -26,40 +26,55 @@ router.get('/users/:user_id/contents/text', (req, res) =>{
     var textContentId_array = [];
     var textContents_array = [];
 
+    sql_user_check = `SELECT * FROM users WHERE id = ${userId}`
     sql_textContentId_load = `SELECT textcontent_id FROM user_textcontents WHERE user_id=${userId}`;
     sql_textContent_load = `SELECT * FROM textcontents WHERE textContentId = `;
 
-    connection.query(sql_textContentId_load, (err, rows) => {
+    connection.query(sql_user_check, (err, rows) => {
         if(err){
-            dbError(res, err);
+            dbError(res, err)
         }
         else if(rows.length == 0){
-            message = "There is no content match user_id";
+            message = "There is no user matches user_id";
             res.json({
-                result: message,
-                textContents: null
+                result : message,
+                textContents : null
             })
         }
         else{
-            for(let i = 0; i < rows.length; i++){
-                textContentId_array.push(rows[i].textcontent_id);
-
-                connection.query(sql_textContent_load+textContentId_array[i], (err, rows) => {
-                    if(err){
-                        dbError(res, err)
+            connection.query(sql_textContentId_load, (err, rows) => {
+                if(err){
+                    dbError(res, err);
+                }
+                else if(rows.length == 0){
+                    message = "There is no content matches user_id";
+                    res.json({
+                        result: message,
+                        textContents: null
+                    })
+                }
+                else{
+                    for(let i = 0; i < rows.length; i++){
+                        textContentId_array.push(rows[i].textcontent_id);
+        
+                        connection.query(sql_textContent_load+textContentId_array[i], (err, rows) => {
+                            if(err){
+                                dbError(res, err)
+                            }
+                            else{
+                                textContents_array.push(rows[0]);
+                                if(textContents_array.length == textContentId_array.length){
+                                    message = "success";
+                                    res.json({
+                                        result : message,
+                                        textContents: textContents_array
+                                    })
+                                }
+                            }
+                        })
                     }
-                    else{
-                        textContents_array.push(rows[0]);
-                        if(textContents_array.length == textContentId_array.length){
-                            message = "success";
-                            res.json({
-                                result : message,
-                                textContents: textContents_array
-                            })
-                        }
-                    }
-                })
-            }
+                }
+            })
         }
     })
 })
@@ -71,40 +86,55 @@ router.get('/users/:user_id/contents/video', (req, res) =>{
     var videoContentId_array = [];
     var videoContents_array = [];
     
+    sql_user_check = `SELECT * FROM users WHERE id = ${userId}`
     sql_videoContentId_load = `SELECT videocontent_id FROM user_videocontents WHERE user_id=${userId}`;
     sql_videoContent_load = `SELECT * FROM videocontents WHERE videoContentId =`;
     
-    connection.query(sql_videoContentId_load, (err, rows) => {
+    connection.query(sql_user_check, (err, rows) => {
         if(err){
-            dbError(res, err);
+            dbError(res,err);
         }
         else if(rows.length == 0){
-            message = "There is no content match user_id";
+            message = "There is no user matches user_id";
             res.json({
-                result: message,
-                videoContents: null
+                result : message,
+                textContents : null
             })
         }
         else{
-            for(let i = 0; i < rows.length; i++){
-                videoContentId_array.push(rows[i].videocontent_id);
-            
-                connection.query(sql_videoContent_load+videoContentId_array[i], (err, rows) => {
-                    if(err){
-                        dbError(res, err)
+            connection.query(sql_videoContentId_load, (err, rows) => {
+                if(err){
+                    dbError(res, err);
+                }
+                else if(rows.length == 0){
+                    message = "There is no content match user_id";
+                    res.json({
+                        result: message,
+                        videoContents: null
+                    })
+                }
+                else{
+                    for(let i = 0; i < rows.length; i++){
+                        videoContentId_array.push(rows[i].videocontent_id);
+                    
+                        connection.query(sql_videoContent_load+videoContentId_array[i], (err, rows) => {
+                            if(err){
+                                dbError(res, err)
+                            }
+                            else{
+                                videoContents_array.push(rows[0]);
+                                if(videoContents_array.length == videoContentId_array.length){
+                                    message = "success";
+                                    res.json({
+                                        result : message,
+                                        videoContents: videoContents_array
+                                    })
+                                }
+                            }
+                        })
                     }
-                    else{
-                        videoContents_array.push(rows[0]);
-                        if(videoContents_array.length == videoContentId_array.length){
-                            message = "success";
-                            res.json({
-                                result : message,
-                                videoContents: videoContents_array
-                            })
-                        }
-                    }
-                })
-            }
+                }
+            })
         }
     })
 })
@@ -116,36 +146,50 @@ router.post('/users/:user_id/contents/text', (req, res, next) => {
 
     var params = [userId, textContentId];
     
+    sql_user_check = `SELECT * FROM users WHERE id = ${userId}`;
     sql_textBookmark_check = `SELECT * FROM user_textcontents WHERE textcontent_id=${textContentId}`
     sql_textBookmark_creation = 'INSERT INTO user_textcontents (user_id, textcontent_id) VALUES (?, ?)'
     sql_textContent_load = `SELECT * FROM textcontents WHERE textContentId=${textContentId}`
     
-    connection.query(sql_textBookmark_check, (err, rows)=> {
-        if(err){
-            dbError(res,err)
+    connection.query(sql_user_check, (err, rows) => {
+        if(err) {
+            dbError(res, err);
         }
-        else if(rows.length > 0){
-            message = "That content already exists."
+        else if(rows.length == 0){
+            message = "There is no user matches user_id";
             res.json({
-                result: message,
-                textContent: null
+                message
             })
         }
         else{
-            connection.query(sql_textBookmark_creation, params, (err) => {
+            connection.query(sql_textBookmark_check, (err, rows)=> {
                 if(err){
-                    dbError(res, err)
+                    dbError(res,err)
+                }
+                else if(rows.length > 0){
+                    message = "That content already exists."
+                    res.json({
+                        result: message,
+                        textContent: null
+                    })
                 }
                 else{
-                    message = "success";
-                    connection.query(sql_textContent_load, (err, rows)=>{
+                    connection.query(sql_textBookmark_creation, params, (err) => {
                         if(err){
-                            dbError(res, err);
+                            dbError(res, err)
                         }
                         else{
-                            res.json({
-                                result : message,
-                                textContent: rows
+                            message = "success";
+                            connection.query(sql_textContent_load, (err, rows)=>{
+                                if(err){
+                                    dbError(res, err);
+                                }
+                                else{
+                                    res.json({
+                                        result : message,
+                                        textContent: rows
+                                    })
+                                }
                             })
                         }
                     })
