@@ -120,6 +120,24 @@ var convertObjectToJson = function(object){
 router.get('/text/users/:user_id', (req, res, next) => {
     const userId = req.params.user_id;
 
+    sql_user_check = `SELECT * FROM users WHERE id = ${userId}`;
+
+    connection.query(sql_user_check, (err, rows) => {
+        if(err){
+            message = "DB has error";
+            res.json({
+                result : message,
+                textContents: null
+            })
+        }
+        else if(rows.length == 0){
+            message = "There is no user matches user_id";
+            res.json({
+                result: message,
+                textContents: null
+            })
+        }
+    })
     getUserSubscriptionInformationByUserId(userId, function (err, rows) {
         if (err) {
             message = "DB has error"
@@ -168,10 +186,37 @@ router.get('/text/users/:user_id', (req, res, next) => {
     user_subscriptions_platform_id = [];        // Reset user_subscriptions_platform_id
 });
 
+router.get('text/users/:user_id', (req, res) => {
+    const userId = req.params.user_id;
+
+    sql_user_check = `SELECT * FROM users WHERE id = ${userId}`;
+    sql_subscriptions_check = `SELECT platform_id, keyword FROM subscriptions WHERE user_id = ${userId}`;
+    sql_textcontent_check = `SELECT * FROM textcontents WHERE platform`
+})
+
 /* GET videoContents array of user by user_hash */
 // 참고 : https://github.com/mysqljs/mysql/issues/1361
 router.get('/video/users/:user_id', (req, res, next) => {
     const userId = req.params.user_id;
+
+    sql_user_check = `SELECT * FROM users WHERE id = ${userId}`;
+
+    connection.query(sql_user_check, (err, rows) => {
+        if(err){
+            message = "DB has error";
+            res.json({
+                result : message,
+                textContents: null
+            })
+        }
+        else if(rows.length == 0){
+            message = "There is no user matches user_id";
+            res.json({
+                result: message,
+                textContents: null
+            })
+        }
+    })
 
     getUserSubscriptionInformationByUserId(userId, function (err, rows) {
         if (err) {
