@@ -71,4 +71,4 @@ function crowl(){
 	});
 }
 
-const time = setInterval(crowl,1000*600);
+const time = setInterval(crowl,3600*600);
