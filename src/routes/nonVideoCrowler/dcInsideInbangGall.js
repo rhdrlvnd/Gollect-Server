@@ -6,7 +6,6 @@ var connection = mysql.createConnection(dbconfig);
 const log = console.log;
 var RURL = "https://gall.dcinside.com/board/lists?id=ib_new1&exception_mode=recommend"
 
-
 const getHtml = async (URL) => {
   try {
     return await axios.get(URL);
@@ -27,7 +26,8 @@ function crowl(){
 		ulList[i] = {
 			id:15,
 			title: $(this).find('td.gall_tit a').text(),
-			url: targetUrl
+			url: targetUrl,
+			domain_id:4
 		};
 	  });
 	  const data = ulList.filter(n => n.title);
@@ -37,9 +37,9 @@ function crowl(){
 	  res.forEach(function(data,i) {
 		  getHtml(data.url).then(html=>{
 			  const $ = cheerio.load(html.data);
-			  const $mText = $("div.gallview_contents");
+			  const $mText = $("div.writing_view_box");
 			  const imgSrc = $mText.find('img').attr('src');
-			  const text = $mText.text().substring(0,20);
+			  const text = $mText.text().substring(0,50);
 			  const time = $("div.gallview_head span.gall_date").text();
 			  return [text,time,imgSrc];
 		}).then(res => {
@@ -48,24 +48,21 @@ function crowl(){
 		  data.img = res[2];
 		  return data;
 		}).then(res=>{
-			  let params = [res.id,res.title,res.text, res.url, res.img, res.time];
-			  log(res.id+','+res.title+','+res.text+','+res.url+','+res.img+','+res.time);
-			  let sql = 'INSERT INTO textcontents (platform_id, title, abstract, url, img_src, uploaded_at) VALUES(?, ?, ?, ?, ?, ?)';
-			  connection.query(sql, params, (err,rows,fields)=>{
-			  if(err){
-				  console.log(err.message);
-			  }
-			  else{
-				  console.log('success!');
-			  }
-		  });
-	  }).catch(err=>{
-		  log("err = " + err)
-	  });
-  });
-  });
-  
+				let params = [res.id,res.title,res.text, res.url, res.img, res.time, res.domain_id];
+				let sql = 'INSERT INTO textcontents (platform_id, title, abstract, url, img_src, uploaded_at, domain_id) VALUES(?, ?, ?, ?, ?, ?, ?)';
+				connection.query(sql, params, (err,rows,fields)=>{
+					if(err){
+						console.log(err.message);
+					}
+					else{
+						console.log('success!');
+					}
+				});
+			}).catch(err=>{
+				log("err = " + err)
+			});
+		});
+	})
 }
 
-
-const time = setInterval(crowl,600*1000);
+const time = setInterval(crowl,100*1000);

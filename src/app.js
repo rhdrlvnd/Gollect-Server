@@ -13,7 +13,10 @@ var bookmarksRouter = require('./routes/bookmarks');
 var app = express();
 
 require('./routes/nonVideoCrowler/overwatchInven');
-
+require('./routes/nonVideoCrowler/joongangNews');
+require('./routes/nonVideoCrowler/hasDecConsulting');
+require('./routes/nonVideoCrowler/dcInsideInbangGall');
+require('./routes/nonVideoCrowler/ajouNotice');
 
 app.use(logger('dev'));
 app.use(express.json());
