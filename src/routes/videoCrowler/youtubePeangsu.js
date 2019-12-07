@@ -4,7 +4,7 @@ const log = console.log;
 var mysql = require('mysql');
 var dbconfig = require('../../config/database.js');
 var connection = mysql.createConnection(dbconfig);
-var RURL = "https://www.youtube.com/channel/UCeudxdJJ4VtlP43Pv9l7f-A/videos"
+var RURL = "https://www.youtube.com/channel/UCtckgmUcpzqGnzcs7xEqMzQ/videos"
 
 const getHtml = async (URL) => {
   try {
@@ -27,7 +27,8 @@ function crowl(){
 			title: $(this).find('div.yt-lockup-content a').text(),
 			thumbnail_src: $(this).find('img').attr('src'),
 			url: "https://www.youtube.com" + $(this).find('div.yt-lockup-content a').attr('href'),
-			duration: $(this).find('span.video-time').text()
+			duration: $(this).find('span.video-time').text(),
+			domain_id:1
 		};
 	  });
 	  const data = ulList.filter(n => n.title);
@@ -63,7 +64,7 @@ function crowl(){
 			  else{
 				  console.log('success!');
 			  }
-		  });
+		  });  
 		});
 	  });
 	});

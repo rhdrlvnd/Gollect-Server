@@ -28,7 +28,8 @@ function crowl(){
 			title: $(this).find('div.yt-lockup-content a').text(),
 			thumbnail_src: $(this).find('img').attr('src'),
 			url: "https://www.youtube.com" + $(this).find('div.yt-lockup-content a').attr('href'),
-			duration: $(this).find('span.video-time').text()
+			duration: $(this).find('span.video-time').text(),
+			domain_id:1
 		};
 	  });
 	  const data = ulList.filter(n => n.title);
@@ -54,8 +55,8 @@ function crowl(){
 		  return data;
 		}).then(res=>{
 		  log(res);
-		  let params = [res.platform_id,res.title,res.thumbnail_src, res.url, res.duration, res.uploaded_at]
-		  let sql = 'INSERT INTO videocontents (platform_id, title, thumbnail_src, url, duration, uploaded_at) VALUES(?, ?, ?, ?, ?, ?)';
+		  let params = [res.platform_id,res.title,res.thumbnail_src, res.url, res.duration, res.uploaded_at, res.domain_id]
+		  let sql = 'INSERT INTO videocontents (platform_id, title, thumbnail_src, url, duration, uploaded_at, domain_id) VALUES(?, ?, ?, ?, ?, ?, ?)';
 		  
 		  connection.query(sql, params, (err,rows,fields)=>{
 			  if(err){
