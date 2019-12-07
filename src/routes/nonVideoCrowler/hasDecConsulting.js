@@ -28,6 +28,7 @@ function crowl(){
 			id:14,
 			title: $(this).find('a.sj_ln').text(),
 			url: targetUrl,
+			domain_id:5
 		};
 	  });
 	  const data = ulList.filter(n => n.title);
@@ -55,9 +56,9 @@ function crowl(){
 		  return data;
 		}).then(res=>{
 		  log("여기는 .then..")
-		  let params = [res.id,res.title,res.text, res.url, res.img, res.time]
+		  let params = [res.id,res.title,res.text, res.url, res.img, res.time, res.domain_id]
 		  //log(res.id+','+res.title+','+res.text+','+res.url+','+res.img+','+res.time);
-		  let sql = 'INSERT INTO textcontents (platform_id, title, abstract, url, img_src, uploaded_at) VALUES(?, ?, ?, ?, ?, ?)';
+		  let sql = 'INSERT INTO textcontents (platform_id, title, abstract, url, img_src, uploaded_at, domain_id) VALUES(?, ?, ?, ?, ?, ?, ?)';
 		  log("sql = "+sql);
 		  
 		  connection.query(sql, params, (err,rows,fields)=>{
