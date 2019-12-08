@@ -4,7 +4,7 @@ var mysql = require('mysql');
 var dbconfig = require('../../config/database.js');
 var connection = mysql.createConnection(dbconfig);
 const log = console.log;
-var RURL = "https://gall.dcinside.com/board/lists?id=ib_new1&exception_mode=recommend"
+var RURL = "https://gall.dcinside.com/board/lists?id=football_new6&exception_mode=recommend"
 
 const getHtml = async (URL) => {
   try {
@@ -14,7 +14,7 @@ const getHtml = async (URL) => {
   }
 };
 
-// function crowl(){
+function crowl(){
 	getHtml(RURL)
 	.then(html => {
 	  let ulList = [];
@@ -40,7 +40,6 @@ const getHtml = async (URL) => {
 			  const $mText = $("div.writing_view_box");
 			  const imgSrc = $mText.find('img').attr('src');
 			  const text = $mText.text().substring(0,20).replace(/^\s*/,"");
-			  console.log(text);
 			  const time = $("div.gallview_head span.gall_date").text();
 			  return [text,time,imgSrc];
 		}).then(res => {
@@ -64,6 +63,6 @@ const getHtml = async (URL) => {
 			});
 		});
 	})
-// }
+}
 
-// const time = setInterval(crowl,10*1000);
+const time = setInterval(crowl,10*1000);
