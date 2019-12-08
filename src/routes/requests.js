@@ -11,11 +11,12 @@ router.use(bodyParser.json());
 
 /* Read user's platform requests */
 router.get('/', (req, res, next) => {
-     var sql_platforms_load = 'SELECT * FROM requests';
-     connection.query(sql_platforms_load, (err, results, fields) => {
+    var sql_platforms_load = 'SELECT * FROM requests';
+
+    connection.query(sql_platforms_load, (err, results, fields) => {
         if(err) {
             res.json({
-                result : "DB Connection Error",
+                result : err.code,
                 requests : null
             });
         }
@@ -25,17 +26,19 @@ router.get('/', (req, res, next) => {
                 requests : results
             });
         }
-     });
+    });
 });
 
 /* Read platfrom request */
 router.get('/:request_id', (req, res, next) => {
     const request_id = req.params.request_id;
+
     var sql_plaform_load = `SELECT * FROM requests WHERE request_id=${request_id}`;
-        connection.query(sql_platforms_load, (err, results, fields) => {
+
+    connection.query(sql_platforms_load, (err, results, fields) => {
         if(err) {
             res.json({
-                result : "DB Connection Error",
+                result : err.code,
                 request : null
             });
         }
@@ -66,7 +69,7 @@ router.post('/', (req, res, next) => {
     connection.query(sql_account_verification, (err, results, fields) => {
         if(err){
             res.json({
-                result : "DB Connection Error - account",
+                result : err.code,
                 request : null
             });
         }
@@ -80,7 +83,7 @@ router.post('/', (req, res, next) => {
             connection.query(sql_request_creation, [user_id, request_title, request_content], (err, results, fields) => {
                 if(err){
                     res.json({
-                        result : "DB Connection Error - post",
+                        result : err.code,
                         request : null
                     });
                 }
@@ -98,6 +101,30 @@ router.post('/', (req, res, next) => {
             });
         }
     });
+});
+
+/* DELETE users filterword*/
+router.delete('/:request_id', function(req, res){
+    const request_id = req.params.request_id;
+
+    var sql_request_delete = `DELETE FROM requests WHERE request_id=${request_id}`;
+    connection.query(sql_request_delete, (err, results, fields) => {
+        if(err){
+            res.json({
+                result : err.code
+            });
+        }
+        else if(results.affectedRows == 0){
+            res.json({
+                results : "No reqeust matches that id.",
+            });
+        }
+        else{
+            res.json({
+                result : "success"
+            });
+        }
+    });    
 });
 
 module.exports = router;
