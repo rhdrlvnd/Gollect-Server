@@ -9,11 +9,11 @@ var urlencode = require('urlencode');
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
 
-/* Read user's platform requests */
+/* Read all requests */
 router.get('/', (req, res, next) => {
-    var sql_platforms_load = 'SELECT * FROM requests';
+    var sql_requests_load = 'SELECT * FROM requests';
 
-    connection.query(sql_platforms_load, (err, results, fields) => {
+    connection.query(sql_requests_load, (err, results, fields) => {
         if(err) {
             res.json({
                 result : err.code,
@@ -29,13 +29,13 @@ router.get('/', (req, res, next) => {
     });
 });
 
-/* Read platfrom request */
+/* Read specific request by id */
 router.get('/:request_id', (req, res, next) => {
     const request_id = req.params.request_id;
 
-    var sql_plaform_load = `SELECT * FROM requests WHERE request_id=${request_id}`;
+    var sql_request_load = `SELECT * FROM requests WHERE request_id=${request_id}`;
 
-    connection.query(sql_platforms_load, (err, results, fields) => {
+    connection.query(sql_request_load, (err, results, fields) => {
         if(err) {
             res.json({
                 result : err.code,
@@ -103,7 +103,7 @@ router.post('/', (req, res, next) => {
     });
 });
 
-/* DELETE users filterword*/
+/* DELETE specific request by id */
 router.delete('/:request_id', function(req, res){
     const request_id = req.params.request_id;
 
