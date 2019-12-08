@@ -11,6 +11,7 @@ var filterwordsRouter = require('./routes/filterwords');
 var subscriptionsRouter = require('./routes/subscriptions');
 var bookmarksRouter = require('./routes/bookmarks');
 var requestRouter = require('./routes/requests');
+var noticeRouter = require('./routes/notices');
 var app = express();
 
 require('./routes/nonVideoCrowler/overwatchInven');
@@ -50,5 +51,6 @@ app.use('/subscriptions',subscriptionsRouter);
 app.use('/filterwords', filterwordsRouter);
 app.use('/bookmarks', bookmarksRouter);
 app.use('/requests', requestRouter);
+app.use('/notices', noticeRouter);
 
 module.exports = app;
