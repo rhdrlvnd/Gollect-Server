@@ -8,12 +8,21 @@ const bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
-var dbError = function(res, err){
+var dbError_text = function(res, err){
     message = err.code
     console.log('Error while performing query.', err);
     res.json({
         result : message,
         textContents: null
+    })
+}
+
+var dbError_video = function(res, err){
+    message = err.code
+    console.log('Error while performing query.', err);
+    res.json({
+        result : message,
+        videoContents: null
     })
 }
 
@@ -32,7 +41,7 @@ router.get('/users/:user_id/contents/text', (req, res) =>{
 
     connection.query(sql_user_check, (err, rows) => {
         if(err){
-            dbError(res, err)
+            dbError_text(res, err)
         }
         else if(rows.length == 0){
             message = "There is no user matches user_id";
@@ -44,7 +53,7 @@ router.get('/users/:user_id/contents/text', (req, res) =>{
         else{
             connection.query(sql_textContentId_load, (err, rows) => {
                 if(err){
-                    dbError(res, err);
+                    dbError_text(res, err);
                 }
                 else if(rows.length == 0){
                     message = "There is no content matches user_id";
@@ -59,7 +68,7 @@ router.get('/users/:user_id/contents/text', (req, res) =>{
         
                         connection.query(sql_textContent_load+textContentId_array[i], (err, rows) => {
                             if(err){
-                                dbError(res, err)
+                                dbError_text(res, err)
                             }
                             else{
                                 textContents_array.push(rows[0]);
@@ -92,7 +101,7 @@ router.get('/users/:user_id/contents/video', (req, res) =>{
     
     connection.query(sql_user_check, (err, rows) => {
         if(err){
-            dbError(res,err);
+            dbError_video(res,err);
         }
         else if(rows.length == 0){
             message = "There is no user matches user_id";
@@ -104,7 +113,7 @@ router.get('/users/:user_id/contents/video', (req, res) =>{
         else{
             connection.query(sql_videoContentId_load, (err, rows) => {
                 if(err){
-                    dbError(res, err);
+                    dbError_video(res, err);
                 }
                 else if(rows.length == 0){
                     message = "There is no content match user_id";
@@ -119,7 +128,7 @@ router.get('/users/:user_id/contents/video', (req, res) =>{
                     
                         connection.query(sql_videoContent_load+videoContentId_array[i], (err, rows) => {
                             if(err){
-                                dbError(res, err)
+                                dbError_video(res, err)
                             }
                             else{
                                 videoContents_array.push(rows[0]);
@@ -153,7 +162,7 @@ router.post('/users/:user_id/contents/text', (req, res, next) => {
     
     connection.query(sql_user_check, (err, rows) => {
         if(err) {
-            dbError(res, err);
+            dbError_text(res, err);
         }
         else if(rows.length == 0){
             message = "There is no user matches user_id";
@@ -164,7 +173,7 @@ router.post('/users/:user_id/contents/text', (req, res, next) => {
         else{
             connection.query(sql_textBookmark_check, (err, rows)=> {
                 if(err){
-                    dbError(res,err)
+                    dbError_text(res,err)
                 }
                 else if(rows.length > 0){
                     message = "That content already exists."
@@ -176,13 +185,13 @@ router.post('/users/:user_id/contents/text', (req, res, next) => {
                 else{
                     connection.query(sql_textBookmark_creation, params, (err) => {
                         if(err){
-                            dbError(res, err)
+                            dbError_text(res, err)
                         }
                         else{
                             message = "success";
                             connection.query(sql_textContent_load, (err, rows)=>{
                                 if(err){
-                                    dbError(res, err);
+                                    dbError_text(res, err);
                                 }
                                 else{
                                     res.json({
@@ -212,7 +221,7 @@ router.post('/users/:user_id/contents/video', (req, res, next) => {
     
     connection.query(sql_videoBookmark_check, (err, rows)=> {
         if(err){
-            dbError(res,err)
+            dbError_video(res,err)
         }
         else if(rows.length > 0){
             message = "That content already exists."
@@ -224,13 +233,13 @@ router.post('/users/:user_id/contents/video', (req, res, next) => {
         else{
             connection.query(sql_videoBookmark_creation, params, (err) => {
                 if(err){
-                    dbError(res, err)
+                    dbError_video(res, err)
                 }
                 else{
                     message = "success";
                     connection.query(sql_videoContent_load, (err, rows)=>{
                         if(err){
-                            dbError(res, err);
+                            dbError_video(res, err);
                         }
                         else{
                             res.json({
@@ -255,7 +264,7 @@ router.delete('/users/:user_id/contents/text/:textcontent_id', (req, res, next) 
 
     connection.query(sql_textBookmark_check, (err, rows) => {
         if(err){
-            dbError(res, err)
+            dbError_text(res, err)
         }
         else if(rows.length == 0){
             message = "There is no bookmark content matches that id";
@@ -266,7 +275,7 @@ router.delete('/users/:user_id/contents/text/:textcontent_id', (req, res, next) 
         else{
             connection.query(sql_textBookmark_remove, (err) => {
                 if(err){
-                    dbError(res, err);
+                    dbError_text(res, err);
                 }
                 else{
                     message = "success";
@@ -289,7 +298,7 @@ router.delete('/users/:user_id/contents/video/:videocontent_id', (req, res, next
 
     connection.query(sql_videoBookmark_check, (err, rows) => {
         if(err){
-            dbError(res, err)
+            dbError_video(res, err)
         }
         else if(rows.length == 0){
             message = "There is no bookmark content matches that id";
@@ -300,7 +309,7 @@ router.delete('/users/:user_id/contents/video/:videocontent_id', (req, res, next
         else{
             connection.query(sql_videoBookmark_remove, (err) => {
                 if(err){
-                    dbError(res, err);
+                    dbError_video(res, err);
                 }
                 else{
                     message = "success";
