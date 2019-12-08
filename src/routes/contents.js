@@ -22,7 +22,7 @@ var getUserSubscriptionInformationByUserId = function (id, callback) {
 
     connection.query(sql, (err, rows, fields) => {
         if (err) {
-            message = "DB has error"
+            message = err.code
             console.log('Error while getTextContentsByPlatformIdAndKeyWord.', err);
             return callback(err);
         }
@@ -58,7 +58,7 @@ var getTextContentsByPlatformIdAndKeyWord = function (platform_id, keyword, call
 
     connection.query(sql, (err, rows, field) => {
         if(err) {
-            message = "DB has error"
+            message = err.code
             console.log('Error while getTextContentsByPlatformIdAndKeyWord.', err);
             return callback(err);
         }
@@ -91,7 +91,7 @@ var getVideoContentsByPlatformIdAndKeyWord = function (platform_id, keyword, cal
 
     connection.query(sql, (err, rows, field) => {
         if(err) {
-            message = "DB has error"
+            message = err.code
             console.log('Error while performing query.', err);
             return callback(err);
         }
@@ -122,7 +122,7 @@ router.get('/text/users/:user_id', (req, res, next) => {
 
     getUserSubscriptionInformationByUserId(userId, function (err, rows) {
         if (err) {
-            message = "DB has error"
+            message = err.code
             console.log('Error while performing query.', err);
             res.json({
                 result : message,
@@ -143,7 +143,7 @@ router.get('/text/users/:user_id', (req, res, next) => {
                 user_subscriptions_keyword,
                 function(err, rows){
                     if(err){
-                        message = "DB has error"
+                        message = err.code
                         console.log('Error while performing query.', err);
                         res.json({
                             result : message,
@@ -175,7 +175,7 @@ router.get('/video/users/:user_id', (req, res, next) => {
 
     getUserSubscriptionInformationByUserId(userId, function (err, rows) {
         if (err) {
-            message = "DB has error"
+            message = err.code
             console.log('Error while performing query.', err);
             res.json({
                 result : message,
@@ -196,7 +196,7 @@ router.get('/video/users/:user_id', (req, res, next) => {
                 user_subscriptions_keyword,
                 function(err, rows){
                     if(err){
-                        message = "DB has error"
+                        message = err.code
                         console.log('Error while performing query.', err);
                         res.json({
                             result : message,
@@ -229,7 +229,7 @@ router.get('/text/:textcontent_id', (req, res) => {
 
     connection.query(sql_textContent_load, (err, rows) => {
         if(err){
-            message = "DB has error"
+            message = err.code
             res.json({
                 result : message,
                 textContent: null
@@ -262,7 +262,7 @@ router.get('/video/:videocontent_id', (req, res) => {
 
     connection.query(sql_videoContent_load, (err, rows) => {
         if(err){
-            message = "DB has error"
+            message = err.code
             res.json({
                 result : message,
                 videoContent: null
