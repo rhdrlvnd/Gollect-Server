@@ -11,7 +11,7 @@ router.use(bodyParser.json());
 var message;
 
 var dbError = function(res, err){
-    message = "DB has error"
+    message = err.code
     console.log('Error while performing query.', err);
     res.json({
         result : message,

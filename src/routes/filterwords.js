@@ -12,7 +12,7 @@ router.use(bodyParser.json());
 var message;
 
 var dbError = function(res, err){
-    message = "DB has error"
+    message = err.code
     console.log('Error while performing query.', err);
     res.json({
         result : message,
@@ -79,7 +79,7 @@ router.post('/users/:user_id', (req, res, next) => {
     params = [user_id, filterword]
 	connection.query(sql_account_verification, (err, rows, fields) => {
 		if(err){
-            message = "DB has error";
+            message = err.code;
             res.json({
                 result : message,
                 filter : null

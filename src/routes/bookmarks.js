@@ -9,7 +9,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
 var dbError = function(res, err){
-    message = "DB has error"
+    message = err.code
     console.log('Error while performing query.', err);
     res.json({
         result : message,
