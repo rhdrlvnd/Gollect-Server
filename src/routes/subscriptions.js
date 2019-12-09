@@ -121,51 +121,5 @@ router.get('/users/:user_id/platforms/:platform_id',(req,res,next)=>{
     });
 });
 
-router.post('/users/:user_id/many',(req,res,next)=>{
-	var userId = req.params.user_id;
-	var platformIds=[];
-	platformIds = req.body.platformId;
-	var keyword = req.body.keyword;
-
-	var subscriptions=[];
-	var sql = 'INSERT INTO subscriptions (user_id, platform_id, keyword) VALUES (?, ?, ?)';
-	var result = "";
-	platformIds.forEach(function(platformId){
-		var params = [userId, platformId, keyword];
-		
-		connection.query(sql, params, (err, rows, fields) => {
-			if(err){
-				console.log(err.code);
-				result=err;
-			}
-			else{
-				result = "success";
-				subscriptions.push({
-					user_id: userId,
-					platform_id: platformId,
-					keyword: keyword
-				})
-			}
-
-
-			if(result=="success"){
-				res.json({
-					result:result,
-					subscriptions:subscriptions
-				})
-			}
-			else{
-				res.json({
-					result:result,
-					subscriptions:null
-				})
-			}
-		});
-		
-	});
-
-	
-});
-
 
 module.exports = router;
