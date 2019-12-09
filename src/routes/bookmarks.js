@@ -156,7 +156,7 @@ router.post('/users/:user_id/contents/text', (req, res, next) => {
     var params = [userId, textContentId];
     
     sql_user_check = `SELECT * FROM users WHERE id = ${userId}`;
-    sql_textBookmark_check = `SELECT * FROM user_textcontents WHERE textcontent_id=${textContentId}`
+    sql_textBookmark_check = `SELECT * FROM user_textcontents WHERE textcontent_id=${textContentId} AND user_id = ${userId}`
     sql_textBookmark_creation = 'INSERT INTO user_textcontents (user_id, textcontent_id) VALUES (?, ?)'
     sql_textContent_load = `SELECT * FROM textcontents WHERE textContentId=${textContentId}`
     
@@ -215,7 +215,7 @@ router.post('/users/:user_id/contents/video', (req, res, next) => {
 
     var params = [userId, videoContentId];
     
-    sql_videoBookmark_check = `SELECT * FROM user_videocontents WHERE videocontent_id=${videoContentId}`
+    sql_videoBookmark_check = `SELECT * FROM user_videocontents WHERE videocontent_id=${videoContentId} AND user_id=${userId}`
     sql_videoBookmark_creation = 'INSERT INTO user_videocontents (user_id, videocontent_id) VALUES (?, ?)'
     sql_videoContent_load = `SELECT * FROM videocontents WHERE videoContentId=${videoContentId}`
     
