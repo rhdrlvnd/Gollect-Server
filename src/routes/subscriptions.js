@@ -40,34 +40,71 @@ router.post('/users/:user_id',(req,res,next)=>{
 	const userId = req.body.userId;
 	const platformId = req.body.platformId;
 	const keyword = req.body.keyword;
-
-
 	var params = [userId, platformId, keyword];
 
+	var sql1 = `SELECT * FROM subscriptions WHERE user_id= ${userId} AND platform_id = ${platformId} AND keyword = ""`
 	var sql = 'INSERT INTO subscriptions (user_id, platform_id, keyword) VALUES (?, ?, ?)';
 
 	var result = "";
 
-	connection.query(sql, params, (err, rows, fields) => {
+	connection.query(sql1, (err,rows) => {
 		if(err){
-			result=err;
+			result = err.code;
 			res.json({
-				result:result,
-				subscriptions:null
-			});
+				result: result,
+				subscriptions: null
+			})
 		}
-		else{
-			result = "success";
-			res.json({
-				result : result,
-				subscriptions: {
-					user_id: userId,
-    				platform_id: platformId,
-    				keyword: keyword
+		else if(rows.length > 0){
+			connection.query(`DELETE FROM subscriptions WHERE user_id = ${userId} AND platform_id = ${platformId} AND keyword = ""`)
+			connection.query(sql, params, (err, rows, fields) => {
+				if(err){
+					result=err;
+					res.json({
+						result:result,
+						subscriptions:null
+					});
+				}
+				else{
+					result = "success";
+					res.json({
+						result : result,
+						subscriptions: {
+							user_id: userId,
+							platform_id: platformId,
+							keyword: keyword
+						}
+					});
 				}
 			});
 		}
-	});
+		else{
+		
+			connection.query(sql, params, (err, rows, fields) => {
+				if(err){
+					result=err;
+					res.json({
+						result:result,
+						subscriptions:null
+					});
+				}
+				else{
+					result = "success";
+					res.json({
+						result : result,
+						subscriptions: {
+							user_id: userId,
+							platform_id: platformId,
+							keyword: keyword
+						}
+					});
+				}
+			});
+		}
+	})
+
+
+
 });
 
 
