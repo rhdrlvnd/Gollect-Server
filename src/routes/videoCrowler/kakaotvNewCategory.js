@@ -21,13 +21,16 @@ function crowl(){
 		const $ = cheerio.load(html.data);
 		const $bodyList = $('#mArticle ul.list_vertical').children('li');
 		$bodyList.each(function(i, elem) {
-		  ulList[i] = {
-			  platform_id:20,
-			  title: $(this).find('strong.tit_item').text(),
-			  thumbnail_src: $(this).find('img').attr('src'),
-			  url: "https://tv.kakao.com"+$(this).find('a').attr('href'),
-			  duration: $(this).find('span.mark_play').text().split(': ')[1].split('\n')[0]
-		  }
+			if(i>5){
+				return false;
+			}
+			ulList[i] = {
+				platform_id:20,
+				title: $(this).find('strong.tit_item').text(),
+				thumbnail_src: $(this).find('img').attr('src'),
+				url: "https://tv.kakao.com"+$(this).find('a').attr('href'),
+				duration: $(this).find('span.mark_play').text().split(': ')[1].split('\n')[0]
+			}
 		});
 		const data = ulList.filter(n => n.title);
 		return data;
@@ -41,16 +44,13 @@ function crowl(){
 			data.domain_id=3;
 			return data;
 		  }).then(res=>{
-			log(res);
+			// log(res);
 			let params = [res.platform_id, res.title, res.thumbnail_src, res.url, res.duration, res.uploaded_at, res.domain_id]
 			let sql = 'INSERT INTO videocontents (platform_id, title, thumbnail_src, url, duration, uploaded_at, domain_id) VALUES(?, ?, ?, ?, ?, ?, ?)';
 			
 			connection.query(sql, params, (err,rows,fields)=>{
 			  if(err){
 				console.log(err.message);
-			  }
-			  else{
-				console.log('success!');
 			  }
 			});
 		  });

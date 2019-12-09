@@ -23,6 +23,9 @@ function crowl(){
 	  const $bodyList = $("#powerbbsBody tbody tr.ls").children("td.bbsSubject");
 	  
 	  $bodyList.each(function(i, elem) {
+		if(i>10){
+			return false;
+		}
 		let targetUrl = $(this).find('a.sj_ln').attr('href');
 		ulList[i] = {
 			id:16,
@@ -36,13 +39,10 @@ function crowl(){
 	})
 	.then(res =>{
 	  res.forEach(function(data,i) {
-	
 		getHtml(data.url).then(html=>{
-		  
 		  const $ = cheerio.load(html.data);
 		  const $mText = $("#powerbbsContent");
 		  const imgSrc = $mText.find('img').attr('src');
-		  
 		  const time = $("#tbArticle div.articleDate").text();
 		  const text = $mText.text().substring(0,20);
 	
@@ -54,20 +54,14 @@ function crowl(){
 		  return data;
 		}).then(res=>{
 		  let params = [res.id,res.title,res.text, res.url, res.img, res.time,res.domain_id]
-		  //log(res.id+','+res.title+','+res.text+','+res.url+','+res.img+','+res.time);
 		  let sql = 'INSERT INTO textcontents (platform_id, title, abstract, url, img_src, uploaded_at, domain_id) VALUES(?, ?, ?, ?, ?, ?, ?)';
 		  
 		  connection.query(sql, params, (err,rows,fields)=>{
 			  if(err){
 				  console.log(err.message);
 			  }
-			  else{
-				  console.log('success!');
-			  }
 		  });
-	
-		  });
-		
+		});
 	  });
 	});
 }

@@ -23,6 +23,9 @@ function crowl(){
 	  const $bodyList = $("#powerbbsBody tbody tr.ls").children("td.bbsSubject");
 	  
 	  $bodyList.each(function(i, elem) {
+		if(i>10){
+			return false;
+		}
 		let targetUrl = $(this).find('a.sj_ln').attr('href');
 		ulList[i] = {
 			id:14,
@@ -55,22 +58,18 @@ function crowl(){
 		  daList[i]=data;
 		  return data;
 		}).then(res=>{
-		  log("여기는 .then..")
 		  let params = [res.id,res.title,res.text, res.url, res.img, res.time, res.domain_id]
-		  //log(res.id+','+res.title+','+res.text+','+res.url+','+res.img+','+res.time);
-		  let sql = 'INSERT INTO textcontents (platform_id, title, abstract, url, img_src, uploaded_at, domain_id) VALUES(?, ?, ?, ?, ?, ?, ?)';
-		  log("sql = "+sql);
 		  
-		  connection.query(sql, params, (err,rows,fields)=>{
+		  let sql = 'INSERT INTO textcontents (platform_id, title, abstract, url, img_src, uploaded_at, domain_id) VALUES(?, ?, ?, ?, ?, ?, ?)';
+		  
+		  connection.query(sql, params, (err,rows,fields)=>{	
 			  if(err){
 				  console.log(err.message);
 			  }
-			  else{
-				  console.log('success!');
-			  }
+		  }).catch((err)=>{
+			  log(err.code);
 		  });
-  
-		  });
+		});
 	  });
   
   });

@@ -22,6 +22,9 @@ function crowl(){
 	  
 	  const $bodyList = $('#channels-browse-content-grid').children('li.channels-content-item');
 	  $bodyList.each(function(i, elem) {
+		if(i>5){
+			return false;
+		}
 		ulList[i] = {
 			platform_id:10,
 			title: $(this).find('div.yt-lockup-content a').text(),
@@ -52,16 +55,12 @@ function crowl(){
 		  
 		  return data;
 		}).then(res=>{
-		  log(res);
 		  let params = [res.platform_id,res.title,res.thumbnail_src, res.url, res.duration, res.uploaded_at, res.domain_id]
 		  let sql = 'INSERT INTO videocontents (platform_id, title, thumbnail_src, url, duration, uploaded_at, domain_id) VALUES(?, ?, ?, ?, ?, ?, ?)';
 		  
 		  connection.query(sql, params, (err,rows,fields)=>{
 			  if(err){
 				  console.log(err.message);
-			  }
-			  else{
-				  console.log('success!');
 			  }
 		  });
 		});
