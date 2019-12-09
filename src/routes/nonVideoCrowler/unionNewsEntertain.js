@@ -20,19 +20,21 @@ function crowl(){
 	  .then(html => {
 		let ulList = [];
 		const $ = cheerio.load(html.data);
-		// console.log(html.data);
 		const $bodyList = $("#content > div.contents > div.contents01 > div.contents-box > div.headlines > ul").children("li.section02");
 		
 		$bodyList.each(function(i, elem) {
-		  let targetUrl = $(this).find('div.con p.poto a').attr('href');
-		  ulList[i] = {
-			  id:24,
-			  title: $(this).find('div.con p.poto img').attr('alt'),
-			  url: 'https:'+targetUrl,
-			  img: $(this).find('div.con p.poto img').attr('src'),
-			  text:$(this).find('div.con p.lead').text().substring(0,30),
-			  domain_id:8
-		  };
+			if(i>10){
+				return false;
+			}
+			let targetUrl = $(this).find('div.con p.poto a').attr('href');
+			ulList[i] = {
+				id:24,
+				title: $(this).find('div.con p.poto img').attr('alt'),
+				url: 'https:'+targetUrl,
+				img: $(this).find('div.con p.poto img').attr('src'),
+				text:$(this).find('div.con p.lead').text().substring(0,30),
+				domain_id:8
+			};
 		});
 		
 		const data = ulList.filter(n => n.title);
@@ -53,14 +55,9 @@ function crowl(){
 					if(err){
 						console.log(err.message);
 					}
-					else{
-						console.log('success!');
-					}
 				});
 			});
 		})
-		
-	
 	})
 }
 

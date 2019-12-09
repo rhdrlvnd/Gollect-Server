@@ -22,6 +22,9 @@ function crowl(){
 	  const $bodyList = $("table.gall_list tbody").children("tr.us-post");
 	  
 	  $bodyList.each(function(i, elem) {
+		if(i>10){
+			return false;
+		}
 		let targetUrl = 'https://gall.dcinside.com'+$(this).find('td.gall_tit a').attr('href');
 		ulList[i] = {
 			id:15,
@@ -54,12 +57,9 @@ function crowl(){
 					if(err){
 						console.log(err.message);
 					}
-					else{
-						console.log('success!');
-					}
 				});
 			}).catch(err=>{
-				log("err = " + err)
+				log(err.code)
 			});
 		});
 	})

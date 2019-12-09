@@ -14,7 +14,7 @@ const getHtml = async (URL) => {
   }
 };
 
-// function crowl(){
+function crowl(){
 	getHtml(RURL)
 	.then(html => {
 	  let ulList = [];
@@ -22,6 +22,9 @@ const getHtml = async (URL) => {
 	  const $bodyList = $("table.gall_list tbody").children("tr.us-post");
 	  
 	  $bodyList.each(function(i, elem) {
+		if(i>10){
+			return false;
+		}
 		let targetUrl = 'https://gall.dcinside.com'+$(this).find('td.gall_tit a').attr('href');
 		ulList[i] = {
 			id:15,
@@ -40,7 +43,6 @@ const getHtml = async (URL) => {
 			  const $mText = $("div.writing_view_box");
 			  const imgSrc = $mText.find('img').attr('src');
 			  const text = $mText.text().substring(0,20).replace(/^\s*/,"");
-			  console.log(text);
 			  const time = $("div.gallview_head span.gall_date").text();
 			  return [text,time,imgSrc];
 		}).then(res => {
@@ -55,15 +57,12 @@ const getHtml = async (URL) => {
 					if(err){
 						console.log(err.message);
 					}
-					else{
-						console.log('success!');
-					}
 				});
 			}).catch(err=>{
-				log("err = " + err)
+				log(err.code)
 			});
 		});
 	})
-// }
+}
 
-// const time = setInterval(crowl,3600*1000);
+const time = setInterval(crowl,3600*1000);

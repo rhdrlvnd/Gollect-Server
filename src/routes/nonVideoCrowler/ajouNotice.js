@@ -23,14 +23,15 @@ function crowl(){
 		const $bodyList = $("div.list_wrap tbody").children("tr");
 		
 		$bodyList.each(function(i, elem) {
-		  let targetUrl = 'http://www.ajou.ac.kr/main/ajou/notice.jsp'+$(this).find('td.title_comm a').attr('href');
-		//   console.log("target = "+targetUrl);
-		  ulList[i] = {
-			  id:21,
-			  title: $(this).find('td.title_comm a').text().split('\n  \t    \t')[1],
-			  url: targetUrl
-		  };
-		//   console.log(ulList[i]);
+			if(i>10){
+				return false;
+			}
+			let targetUrl = 'http://www.ajou.ac.kr/main/ajou/notice.jsp'+$(this).find('td.title_comm a').attr('href');
+			ulList[i] = {
+				id:21,
+				title: $(this).find('td.title_comm a').text().split('\n  \t    \t')[1],
+				url: targetUrl
+			};
 		});
 		const data = ulList.filter(n => n.title);
 		return data;
@@ -56,12 +57,9 @@ function crowl(){
 				if(err){
 					console.log(err.message);
 				}
-				else{
-					console.log('success!');
-				}
 			});
 		}).catch(err=>{
-			log("err = " + err)
+			log(err.code)
 	  });
 	});
 	});
