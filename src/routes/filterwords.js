@@ -4,7 +4,7 @@ var mysql = require('mysql');
 var dbconfig = require('../config/database.js');
 var connection = mysql.createConnection(dbconfig);
 var bodyParser = require('body-parser');
-var urlencode = require('urlencode');
+// var urlencode = require('urlencode');
 
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
@@ -129,9 +129,9 @@ router.post('/users/:user_id', (req, res, next) => {
 });
 
 /* DELETE users filterword*/
-router.delete('/:filterword/users/:user_id', function(req, res){
-    const filterword = urlencode.decode(req.params.filterword);
-    console.log(filterword)
+router.delete('/users/:user_id', function(req, res){
+    // const filterword = urlencode.decode(req.params.filterword);
+    const filterword = req.body.filterword;
     const user_id = req.params.user_id;
     
 	var sql_account_verification = `SELECT filterword FROM user_filterwords WHERE user_id=${user_id}`;
