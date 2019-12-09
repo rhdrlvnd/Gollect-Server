@@ -56,4 +56,31 @@ router.get('/:platform_id',(req,res,next)=>{
     });
 })
 
+//Delete User's Subs platform
+router.delete('/:platform_id/users/:user_id',(req,res,next)=>{
+	var userId=req.params.user_id;
+	var platformId = req.params.platform_id;
+
+	var result = "";
+
+	var sql = "DELETE FROM subscriptions WHERE user_id = "+userId;
+	sql +=" and platform_id = "+platformId;
+	console.log(sql);
+	
+	connection.query(sql, (err, rows) => {
+        if (err) {
+			result = err;
+			res.json({
+				result: result
+			});
+		}
+        else {
+			result = "success";
+			res.json({
+				result: result
+			});
+        }
+    });
+})
+
 module.exports = router;
