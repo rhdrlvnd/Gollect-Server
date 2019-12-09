@@ -41,10 +41,7 @@ router.post('/users/:user_id',(req,res,next)=>{
 	const platformId = req.body.platformId;
 	const keyword = req.body.keyword;
 
-	console.log("req.params = "+req.params);
-	// console.log(userId);
-	// console.log(platformId);
-	// console.log(keyword);
+
 	var params = [userId, platformId, keyword];
 
 	var sql = 'INSERT INTO subscriptions (user_id, platform_id, keyword) VALUES (?, ?, ?)';
@@ -64,8 +61,8 @@ router.post('/users/:user_id',(req,res,next)=>{
 			res.json({
 				result : result,
 				subscriptions: {
-					userId: userId,
-    				platformId: platformId,
+					user_id: userId,
+    				platform_id: platformId,
     				keyword: keyword
 				}
 			});
@@ -124,37 +121,50 @@ router.get('/users/:user_id/platforms/:platform_id',(req,res,next)=>{
     });
 });
 
-router.post('/users/:user_id',(req,res,next)=>{
-	const userId = req.params.user_id;
-	const platformIds=[];
+router.post('/users/:user_id/many',(req,res,next)=>{
+	var userId = req.params.user_id;
+	var platformIds=[];
 	platformIds = req.body.platformId;
-	const keyword = req.body.keyword;
-	var sql = 'INSERT INTO subscriptions (user_id, platform_id, keyword) VALUES (?, ?, ?)';
+	var keyword = req.body.keyword;
 
-	platformIds.forEach(platformId=>{
+	var subscriptions=[];
+	var sql = 'INSERT INTO subscriptions (user_id, platform_id, keyword) VALUES (?, ?, ?)';
+	var result = "";
+	platformIds.forEach(function(platformId){
 		var params = [userId, platformId, keyword];
-		var result = "";
+		
 		connection.query(sql, params, (err, rows, fields) => {
 			if(err){
+				console.log(err.code);
 				result=err;
-				res.json({
-					result:result,
-					subscriptions:null
-				});
 			}
 			else{
 				result = "success";
+				subscriptions.push({
+					user_id: userId,
+					platform_id: platformId,
+					keyword: keyword
+				})
+			}
+
+
+			if(result=="success"){
 				res.json({
-					result : result,
-					subscriptions: {
-						userId: userId,
-						platformId: platformId,
-						keyword: keyword
-					}
-				});
+					result:result,
+					subscriptions:subscriptions
+				})
+			}
+			else{
+				res.json({
+					result:result,
+					subscriptions:null
+				})
 			}
 		});
+		
 	});
+
+	
 });
 
 
