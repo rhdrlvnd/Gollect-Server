@@ -34,7 +34,7 @@ function crowl(){
 				title: $(this).find('span.thumb img').attr('alt'),
 				url: targetUrl,
 				img: $(this).find('span.thumb img').attr('src'),
-				text:$(this).find('span.lead a').text().substring(0,30),
+				text:$(this).find('span.lead a').text().trim().substring(0,15),
 				time:t[0]+'-'+t[1]+'-'+t[2],
 				domain_id:7
 			};

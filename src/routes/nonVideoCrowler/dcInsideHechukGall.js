@@ -27,7 +27,7 @@ function crowl(){
 		}
 		let targetUrl = 'https://gall.dcinside.com'+$(this).find('td.gall_tit a').attr('href');
 		ulList[i] = {
-			id:15,
+			id:27,
 			title: $(this).find('td.gall_tit a').text(),
 			url: targetUrl,
 			domain_id:4
@@ -42,7 +42,7 @@ function crowl(){
 			  const $ = cheerio.load(html.data);
 			  const $mText = $("div.writing_view_box");
 			  const imgSrc = $mText.find('img').attr('src');
-			  const text = $mText.text().substring(0,20).replace(/^\s*/,"");
+			  const text = $mText.text().trim().substring(0,15);
 			  const time = $("div.gallview_head span.gall_date").text();
 			  return [text,time,imgSrc];
 		}).then(res => {

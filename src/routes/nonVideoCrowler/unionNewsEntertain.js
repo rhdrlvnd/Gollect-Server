@@ -32,7 +32,7 @@ function crowl(){
 				title: $(this).find('div.con p.poto img').attr('alt'),
 				url: 'https:'+targetUrl,
 				img: $(this).find('div.con p.poto img').attr('src'),
-				text:$(this).find('div.con p.lead').text().substring(0,30),
+				text:$(this).find('div.con p.lead').text().trim().substring(0,15),
 				domain_id:8
 			};
 		});

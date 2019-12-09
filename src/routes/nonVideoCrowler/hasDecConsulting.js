@@ -48,7 +48,7 @@ function crowl(){
 		  const imgSrc = $mText.find('img').attr('src');
 		  
 		  const time = $("#tbArticle div.articleDate").text();
-		  const text = $mText.text().substring(0,20);
+		  const text = $mText.text().trim().substring(0,15);
   
 		  return [text,time,imgSrc];
 		}).then(res => {
