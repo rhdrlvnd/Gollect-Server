@@ -44,25 +44,25 @@ function crowl(){
 			const $ = cheerio.load(html.data);
 			const $mText = $("#article_text");
 			data.img = 'http://www.ajou.ac.kr/'+$mText.find('img').attr('src');
-			data.text = $mText.text().split('\n      \t')[1].substring(0,30);
+			data.text = $mText.text().trim().substring(0,15);
 			data.time = $('#jwxe_main_content > div > div.view_wrap.ko > table > tbody > tr:nth-child(2) > td:nth-child(4)').text();
 			data.domain_id=6;
 			return data;
 		  }).then(res=>{
-			
-			let params = [res.id,res.title,res.text, res.url, res.img, res.time,res.domain_id];
-			
-			let sql = 'INSERT INTO textcontents (platform_id, title, abstract, url, img_src, uploaded_at,domain_id) VALUES(?, ?, ?, ?, ?, ?, ?)';
-			connection.query(sql, params, (err,rows,fields)=>{
-				if(err){
-					console.log(err.message);
-				}
-			});
-		}).catch(err=>{
-			log(err.code)
-	  });
-	});
-	});
+
+				let params = [res.id,res.title,res.text, res.url, res.img, res.time,res.domain_id];
+				
+				let sql = 'INSERT INTO textcontents (platform_id, title, abstract, url, img_src, uploaded_at,domain_id) VALUES(?, ?, ?, ?, ?, ?, ?)';
+				connection.query(sql, params, (err,rows,fields)=>{
+					if(err){
+						console.log(err.message);
+					}
+				});
+			}).catch(err=>{
+				log(err.code)
+	  		});
+		});
+	});	
 }
 
 const time=setInterval(crowl,3600*1000);
