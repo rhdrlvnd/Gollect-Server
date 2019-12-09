@@ -38,9 +38,7 @@ function crowl(){
 	  return data;
 	})
 	.then(res => {
-	  // console.log(res);
 	  res.forEach(function(data,i) {
-	  //   console.log(data.title);
 		getHtml(data.url).then(html=>{
 		  const $ = cheerio.load(html.data);
 		  const text = $('#watch-uploader-info').text();

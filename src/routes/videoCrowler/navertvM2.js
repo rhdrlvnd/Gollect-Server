@@ -24,7 +24,6 @@ function crowl(){
 	
 		let ulList = [];
 		const $ = cheerio.load(html.data);
-		// console.log(html.data);
 		const $bodyList = $('div.cds_area').children('div.cds');
 		$bodyList.each(function(i, elem) {
 			if(i>5){

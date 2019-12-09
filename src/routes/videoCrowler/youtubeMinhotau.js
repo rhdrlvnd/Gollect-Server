@@ -26,7 +26,7 @@ function crowl(){
 			return false;
 		}
 		ulList[i] = {
-			platform_id:1,
+			platform_id:6,
 			title: $(this).find('div.yt-lockup-content a').text(),
 			thumbnail_src: $(this).find('img').attr('src'),
 			url: "https://www.youtube.com" + $(this).find('div.yt-lockup-content a').attr('href'),

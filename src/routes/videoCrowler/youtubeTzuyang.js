@@ -4,7 +4,7 @@ const log = console.log;
 var mysql = require('mysql');
 var dbconfig = require('../../config/database.js');
 var connection = mysql.createConnection(dbconfig);
-var RURL = "https://www.youtube.com/channel/UCBa9U1nh3fe2lBx3a0R0Skg/videos"
+var RURL = "https://www.youtube.com/channel/UCfpaSruWW3S4dibonKXENjA/videos"
 
 const getHtml = async (URL) => {
   try {
@@ -28,7 +28,7 @@ function crowl(){
 				return false;
 			}
 		  ulList[i] = {
-			  platform_id:13,
+			  platform_id:5,
 			  title: $(this).find('div.yt-lockup-content a').text(),
 			  thumbnail_src: $(this).find('img').attr('src'),
 			  url: "https://www.youtube.com" + $(this).find('div.yt-lockup-content a').attr('href'),
