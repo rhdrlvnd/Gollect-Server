@@ -30,7 +30,9 @@ function crowl(){
 			title: $(this).find('div.yt-lockup-content a').text(),
 			thumbnail_src: $(this).find('img').attr('src'),
 			url: "https://www.youtube.com" + $(this).find('div.yt-lockup-content a').attr('href'),
-			duration: $(this).find('span.video-time').text()
+			duration: $(this).find('span.video-time').text(),
+			domain_id:1
+
 		};
 	  });
 	  const data = ulList.filter(n => n.title);
