@@ -70,5 +70,7 @@ function crowl(){
   });
 }
 
+console.log("here is 보겸tv");
+
 const time = setInterval(crowl,3600*1000);
 
