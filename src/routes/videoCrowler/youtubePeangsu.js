@@ -67,5 +67,6 @@ function crowl(){
 	});
 }
 
+console.log("here is 펭수tv");
 
 const time = setInterval(crowl,3600*1000);
