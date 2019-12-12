@@ -71,6 +71,7 @@ function crowl(){
 }
 
 console.log("here is 보겸tv");
+crowl();
 
 const time = setInterval(crowl,3600*1000);
 
