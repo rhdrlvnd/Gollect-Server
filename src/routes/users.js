@@ -80,7 +80,8 @@ router.post('/', (req, res, next) => {
                             console.log("In load ; ", rows)
                             res.json({
                                 result : message,
-                                user : rows
+                                user : rows,
+                                flag : 1
                             })
                         }
                     })
@@ -93,6 +94,7 @@ router.post('/', (req, res, next) => {
             res.json({
                 result : message,
                 user: null,
+                flag: 2
             });
         }
     })
