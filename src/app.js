@@ -14,39 +14,6 @@ var requestRouter = require('./routes/requests');
 var noticeRouter = require('./routes/notices');
 var app = express();
 
-// require('./routes/nonVideoCrowler/overwatchInven');
-// require('./routes/nonVideoCrowler/joongangNews');
-// require('./routes/nonVideoCrowler/hasDecConsulting');
-// require('./routes/nonVideoCrowler/dcInsideInbangGall');
-// require('./routes/nonVideoCrowler/ajouNotice');
-// require('./routes/nonVideoCrowler/dcInsideHechukGall');
-// require('./routes/nonVideoCrowler/dcInsideYagall');
-// require('./routes/nonVideoCrowler/dcInsideZoosicGall');
-// require('./routes/nonVideoCrowler/unionNewsEntertain');
-// require('./routes/nonVideoCrowler/unionNewsPolitics');
-
-
-
-// require('./routes/videoCrowler/kakaotvLeedongwook');
-// require('./routes/videoCrowler/kakaotvNewCategory');
-// require('./routes/videoCrowler/navertvM2');
-// require('./routes/videoCrowler/navertvMuBank');
-// require('./routes/videoCrowler/youtubeAlganzi');
-// require('./routes/videoCrowler/youtubeBokyemtv');
-// require('./routes/videoCrowler/youtubeBongjoon');
-// require('./routes/videoCrowler/youtubeJJoNak');
-// require('./routes/videoCrowler/youtubeJungyoonjong');
-// require('./routes/videoCrowler/youtubeKimduckbaeStory');
-// require('./routes/videoCrowler/youtubeKimyoonhwan');
-// require('./routes/videoCrowler/youtubeMinhotau');
-// require('./routes/videoCrowler/youtubeOmeKim');
-// require('./routes/videoCrowler/youtubePeangsu');
-// require('./routes/videoCrowler/youtubeRealKim');
-// require('./routes/videoCrowler/youtuberyujehong');
-// require('./routes/videoCrowler/youtubeTaekshin');
-// require('./routes/videoCrowler/youtubeTzuyang');
-
-
 
 app.use(logger('dev'));
 app.use(express.json());
